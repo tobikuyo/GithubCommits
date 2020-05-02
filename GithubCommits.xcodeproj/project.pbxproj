@@ -13,6 +13,7 @@
 		2C172006245E169F005C4D2C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C172004245E169F005C4D2C /* Main.storyboard */; };
 		2C172008245E16A3005C4D2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C172007245E16A3005C4D2C /* Assets.xcassets */; };
 		2C17200B245E16A3005C4D2C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C172009245E16A3005C4D2C /* LaunchScreen.storyboard */; };
+		2C172013245E1C31005C4D2C /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C172012245E1C31005C4D2C /* SwiftyJSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		2C172007245E16A3005C4D2C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C17200A245E16A3005C4D2C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2C17200C245E16A3005C4D2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C172012245E1C31005C4D2C /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 				2C172000245E169F005C4D2C /* SceneDelegate.swift */,
 				2C172002245E169F005C4D2C /* ViewController.swift */,
 				2C172004245E169F005C4D2C /* Main.storyboard */,
+				2C172012245E1C31005C4D2C /* SwiftyJSON.swift */,
 				2C172007245E16A3005C4D2C /* Assets.xcassets */,
 				2C172009245E16A3005C4D2C /* LaunchScreen.storyboard */,
 				2C17200C245E16A3005C4D2C /* Info.plist */,
@@ -141,6 +144,7 @@
 				2C172003245E169F005C4D2C /* ViewController.swift in Sources */,
 				2C171FFF245E169F005C4D2C /* AppDelegate.swift in Sources */,
 				2C172001245E169F005C4D2C /* SceneDelegate.swift in Sources */,
+				2C172013245E1C31005C4D2C /* SwiftyJSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
