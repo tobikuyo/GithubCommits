@@ -15,6 +15,7 @@
 		2C172013245E1C31005C4D2C /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C172012245E1C31005C4D2C /* SwiftyJSON.swift */; };
 		2C17201C245E1EE0005C4D2C /* CommitsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C17201B245E1EE0005C4D2C /* CommitsTableViewController.swift */; };
 		2C17201E245E2313005C4D2C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C17201D245E2313005C4D2C /* DetailViewController.swift */; };
+		2C172021245E25EE005C4D2C /* Commits.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C17201F245E25EE005C4D2C /* Commits.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		2C172012245E1C31005C4D2C /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		2C17201B245E1EE0005C4D2C /* CommitsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommitsTableViewController.swift; sourceTree = "<group>"; };
 		2C17201D245E2313005C4D2C /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		2C172020245E25EE005C4D2C /* Commits.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Commits.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 		2C172018245E1E3E005C4D2C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				2C17201F245E25EE005C4D2C /* Commits.xcdatamodeld */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -200,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C172021245E25EE005C4D2C /* Commits.xcdatamodeld in Sources */,
 				2C17201C245E1EE0005C4D2C /* CommitsTableViewController.swift in Sources */,
 				2C171FFF245E169F005C4D2C /* AppDelegate.swift in Sources */,
 				2C17201E245E2313005C4D2C /* DetailViewController.swift in Sources */,
@@ -402,6 +406,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2C17201F245E25EE005C4D2C /* Commits.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2C172020245E25EE005C4D2C /* Commits.xcdatamodel */,
+			);
+			currentVersion = 2C172020245E25EE005C4D2C /* Commits.xcdatamodel */;
+			path = Commits.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2C171FF3245E169F005C4D2C /* Project object */;
 }
