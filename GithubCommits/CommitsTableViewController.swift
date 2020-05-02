@@ -7,17 +7,37 @@
 //
 
 import UIKit
+import CoreData
 
 class CommitsTableViewController: UITableViewController {
+
+    // MARK: - Properties
+
+    var container: NSPersistentContainer!
+
+    // MARK: - View Lifecyle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        container = NSPersistentContainer(name: "Commits")
+        container.loadPersistentStores { storeDescription, error in
+            if let error = error {
+                NSLog("Error loading from persistent stores: \(error)")
+            }
+        }
+    }
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    // MARK: - Actions
+
+    func saveContext() {
+        if container.viewContext.hasChanges {
+            do {
+                try container.viewContext.save()
+            } catch {
+                NSLog("An error occured while saving: \(error)")
+            }
+        }
     }
 
     // MARK: - Table view data source
