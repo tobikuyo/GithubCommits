@@ -24,6 +24,8 @@ class CommitsTableViewController: UITableViewController {
 
         container = NSPersistentContainer(name: "Commits")
         container.loadPersistentStores { storeDescription, error in
+            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
             if let error = error {
                 NSLog("Error loading from persistent stores: \(error)")
             }
