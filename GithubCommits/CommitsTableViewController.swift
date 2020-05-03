@@ -123,12 +123,12 @@ class CommitsTableViewController: UITableViewController {
         let alert = UIAlertController(title: "Filter Commits", message: nil, preferredStyle: .actionSheet)
 
         alert.addAction(UIAlertAction(title: "Show Only Fixes", style: .default, handler: { [unowned self] _ in
-            self.commitPredicate = NSPredicate(format: "message CONTAINS[c]", "fix")
+            self.commitPredicate = NSPredicate(format: "message CONTAINS[c] 'fix'")
             self.loadSavedData()
         }))
 
         alert.addAction(UIAlertAction(title: "Ignore Pull Requests", style: .default, handler: { [unowned self] _ in
-            self.commitPredicate = NSPredicate(format: "NOT message BEGINSWITH", "Merge pull request")
+            self.commitPredicate = NSPredicate(format: "NOT message BEGINSWITH 'Merge pull request'")
             self.loadSavedData()
         }))
 
@@ -137,6 +137,11 @@ class CommitsTableViewController: UITableViewController {
             self.commitPredicate = NSPredicate(format: "date > %@", twelveHoursAgo as NSDate)
             self.loadSavedData()
         }))
+
+        alert.addAction(UIAlertAction(title: "Show only Durian commits", style: .default) { [unowned self] _ in
+            self.commitPredicate = NSPredicate(format: "author.name == 'Joe Groff'")
+            self.loadSavedData()
+        })
 
         alert.addAction(UIAlertAction(title: "Show All Commits", style: .default, handler: { [unowned self] _ in
             self.commitPredicate = nil
@@ -170,17 +175,9 @@ class CommitsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
+            vc.detailItem = commits[indexPath.row]
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

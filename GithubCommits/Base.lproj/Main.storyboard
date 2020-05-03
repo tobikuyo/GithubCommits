@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Root View Controller-->
+        <!--Commits-->
         <scene sceneID="ccL-lI-5mQ">
             <objects>
                 <tableViewController id="FNO-vx-9eu" customClass="CommitsTableViewController" customModule="GithubCommits" customModuleProvider="target" sceneMemberID="viewController">
@@ -46,7 +46,7 @@
                             <outlet property="delegate" destination="FNO-vx-9eu" id="5YO-Y5-Dry"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="njn-kY-fkc"/>
+                    <navigationItem key="navigationItem" title="Commits" id="njn-kY-fkc"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Irg-bp-EDu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -88,8 +88,8 @@
         <scene sceneID="Opq-wz-kzn">
             <objects>
                 <navigationController id="25F-3P-a55" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hv5-cT-vXA">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="hv5-cT-vXA">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
