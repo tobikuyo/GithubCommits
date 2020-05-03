@@ -16,6 +16,8 @@
 		2C17201C245E1EE0005C4D2C /* CommitsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C17201B245E1EE0005C4D2C /* CommitsTableViewController.swift */; };
 		2C17201E245E2313005C4D2C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C17201D245E2313005C4D2C /* DetailViewController.swift */; };
 		2C172021245E25EE005C4D2C /* Commits.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C17201F245E25EE005C4D2C /* Commits.xcdatamodeld */; };
+		2C172024245F02D8005C4D2C /* Commit+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C172022245F02D8005C4D2C /* Commit+CoreDataClass.swift */; };
+		2C172025245F02D8005C4D2C /* Commit+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C172023245F02D8005C4D2C /* Commit+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		2C17201B245E1EE0005C4D2C /* CommitsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommitsTableViewController.swift; sourceTree = "<group>"; };
 		2C17201D245E2313005C4D2C /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		2C172020245E25EE005C4D2C /* Commits.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Commits.xcdatamodel; sourceTree = "<group>"; };
+		2C172022245F02D8005C4D2C /* Commit+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Commit+CoreDataClass.swift"; sourceTree = "<group>"; };
+		2C172023245F02D8005C4D2C /* Commit+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Commit+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +115,8 @@
 			isa = PBXGroup;
 			children = (
 				2C17201F245E25EE005C4D2C /* Commits.xcdatamodeld */,
+				2C172022245F02D8005C4D2C /* Commit+CoreDataClass.swift */,
+				2C172023245F02D8005C4D2C /* Commit+CoreDataProperties.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -204,10 +210,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C172021245E25EE005C4D2C /* Commits.xcdatamodeld in Sources */,
+				2C172024245F02D8005C4D2C /* Commit+CoreDataClass.swift in Sources */,
 				2C17201C245E1EE0005C4D2C /* CommitsTableViewController.swift in Sources */,
 				2C171FFF245E169F005C4D2C /* AppDelegate.swift in Sources */,
 				2C17201E245E2313005C4D2C /* DetailViewController.swift in Sources */,
 				2C172001245E169F005C4D2C /* SceneDelegate.swift in Sources */,
+				2C172025245F02D8005C4D2C /* Commit+CoreDataProperties.swift in Sources */,
 				2C172013245E1C31005C4D2C /* SwiftyJSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
