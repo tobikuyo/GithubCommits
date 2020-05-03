@@ -16,16 +16,18 @@ class CommitsTableViewController: UITableViewController {
     let url = URL(string: "https://api.github.com/repos/apple/swift/commits?per_page=100")!
     var container: NSPersistentContainer!
     var commits = [Commit]()
+    var commitPredicate: NSPredicate?
 
     // MARK: - View Lifecyle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadSavedData()
 
         container = NSPersistentContainer(name: "Commits")
         container.loadPersistentStores { storeDescription, error in
             self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            
+
             if let error = error {
                 NSLog("Error loading from persistent stores: \(error)")
             }
@@ -33,10 +35,45 @@ class CommitsTableViewController: UITableViewController {
 
         performSelector(inBackground: #selector(fetchCommits), with: nil)
 
-        loadSavedData()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Filter", style: .plain, target: self, action: #selector(changeFilter))
     }
 
     // MARK: - Actions
+
+    func saveContext() {
+        if container.viewContext.hasChanges {
+            do {
+                try container.viewContext.save()
+            } catch {
+                NSLog("An error occured while saving: \(error)")
+            }
+        }
+    }
+
+    func configure(commit: Commit, usingJSON json: JSON) {
+        commit.sha = json["sha"].stringValue
+        commit.message = json["commit"]["message"].stringValue
+        commit.url = json["url"].stringValue
+
+        let formatter = ISO8601DateFormatter()
+        let dateJSON = json["commit"]["committer"]["date"]
+        commit.date = formatter.date(from: dateJSON.stringValue) ?? Date()
+    }
+
+    func loadSavedData() {
+        let request = Commit.createFetchRequest()
+        let sortByDate = NSSortDescriptor(key: "date", ascending: false)
+        request.sortDescriptors = [sortByDate]
+        request.predicate = commitPredicate
+
+        do {
+            commits = try container.viewContext.fetch(request)
+            print("Got \(commits.count) commits")
+            tableView.reloadData()
+        } catch {
+            NSLog("Error fetching Commit object: \(error)")
+        }
+    }
 
     @objc func fetchCommits() {
         if let data = try? String(contentsOf: url) {
@@ -56,38 +93,32 @@ class CommitsTableViewController: UITableViewController {
         }
     }
 
-    func configure(commit: Commit, usingJSON json: JSON) {
-        commit.sha = json["sha"].stringValue
-        commit.message = json["commit"]["message"].stringValue
-        commit.url = json["url"].stringValue
+    @objc func changeFilter() {
+        let alert = UIAlertController(title: "Filter Commits", message: nil, preferredStyle: .actionSheet)
 
-        let formatter = ISO8601DateFormatter()
-        let dateJSON = json["commit"]["committer"]["date"]
-        commit.date = formatter.date(from: dateJSON.stringValue) ?? Date()
-    }
+        alert.addAction(UIAlertAction(title: "Show Only Fixes", style: .default, handler: { [unowned self] _ in
+            self.commitPredicate = NSPredicate(format: "message CONTAINS[c]", "fix")
+            self.loadSavedData()
+        }))
 
-    func loadSavedData() {
-        let request = Commit.createFetchRequest()
-        let sortByDate = NSSortDescriptor(key: "date", ascending: false)
-        request.sortDescriptors = [sortByDate]
+        alert.addAction(UIAlertAction(title: "Ignore Pull Requests", style: .default, handler: { [unowned self] _ in
+            self.commitPredicate = NSPredicate(format: "NOT message BEGINSWITH", "Merge pull request")
+            self.loadSavedData()
+        }))
 
-        do {
-            commits = try container.viewContext.fetch(request)
-            print("Got \(commits.count) commits")
-            tableView.reloadData()
-        } catch {
-            NSLog("Error fetching Commit object: \(error)")
-        }
-    }
+        alert.addAction(UIAlertAction(title: "Show Only Recent", style: .default, handler: { [unowned self] _ in
+            let twelveHoursAgo = Date().addingTimeInterval(-43_200)
+            self.commitPredicate = NSPredicate(format: "date > %@", twelveHoursAgo as NSDate)
+            self.loadSavedData()
+        }))
 
-    func saveContext() {
-        if container.viewContext.hasChanges {
-            do {
-                try container.viewContext.save()
-            } catch {
-                NSLog("An error occured while saving: \(error)")
-            }
-        }
+        alert.addAction(UIAlertAction(title: "Show All Commits", style: .default, handler: { [unowned self] _ in
+            self.commitPredicate = nil
+            self.loadSavedData()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true)
     }
 
     // MARK: - Table view data source
