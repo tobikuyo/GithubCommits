@@ -13,8 +13,9 @@ class CommitsTableViewController: UITableViewController {
 
     // MARK: - Properties
 
-    var container: NSPersistentContainer!
     let url = URL(string: "https://api.github.com/repos/apple/swift/commits?per_page=100")!
+    var container: NSPersistentContainer!
+    var commits = [Commit]()
 
     // MARK: - View Lifecyle
 
@@ -29,6 +30,8 @@ class CommitsTableViewController: UITableViewController {
         }
 
         performSelector(inBackground: #selector(fetchCommits), with: nil)
+
+        loadSavedData()
     }
 
     // MARK: - Actions
@@ -46,6 +49,7 @@ class CommitsTableViewController: UITableViewController {
                 }
 
                 self.saveContext()
+                self.loadSavedData()
             }
         }
     }
@@ -58,6 +62,20 @@ class CommitsTableViewController: UITableViewController {
         let formatter = ISO8601DateFormatter()
         let dateJSON = json["commit"]["committer"]["date"]
         commit.date = formatter.date(from: dateJSON.stringValue) ?? Date()
+    }
+
+    func loadSavedData() {
+        let request = Commit.createFetchRequest()
+        let sortByDate = NSSortDescriptor(key: "date", ascending: false)
+        request.sortDescriptors = [sortByDate]
+
+        do {
+            commits = try container.viewContext.fetch(request)
+            print("Got \(commits.count) commits")
+            tableView.reloadData()
+        } catch {
+            NSLog("Error fetching Commit object: \(error)")
+        }
     }
 
     func saveContext() {
@@ -73,59 +91,26 @@ class CommitsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return commits.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CommitCell", for: indexPath)
 
-        // Configure the cell...
+        let commit = commits[indexPath.row]
+        cell.textLabel?.text = commit.message
+        cell.detailTextLabel?.text = commit.date.description
 
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 
     /*
     // MARK: - Navigation
