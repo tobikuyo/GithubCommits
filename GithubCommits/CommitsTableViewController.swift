@@ -22,7 +22,6 @@ class CommitsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadSavedData()
 
         container = NSPersistentContainer(name: "Commits")
         container.loadPersistentStores { storeDescription, error in
@@ -35,6 +34,8 @@ class CommitsTableViewController: UITableViewController {
 
         performSelector(inBackground: #selector(fetchCommits), with: nil)
 
+        loadSavedData()
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Filter", style: .plain, target: self, action: #selector(changeFilter))
     }
 
@@ -58,6 +59,31 @@ class CommitsTableViewController: UITableViewController {
         let formatter = ISO8601DateFormatter()
         let dateJSON = json["commit"]["committer"]["date"]
         commit.date = formatter.date(from: dateJSON.stringValue) ?? Date()
+
+        /// This is the Author entity that has a relationship to the Commit entity
+        var commitAuthor: Author!
+
+        let authorRequest = Author.createFetchRequest()
+        let authorName = json["commit"]["committer"]["name"]
+        authorRequest.predicate = NSPredicate(format: "name == %@", authorName.stringValue)
+
+        if let authors = try? container.viewContext.fetch(authorRequest) {
+            if authors.count > 0 {
+                commitAuthor = authors[0]
+            }
+        }
+
+        if commitAuthor == nil {
+            let author = Author(context: container.viewContext)
+            let name = json["commit"]["committer"]["name"].stringValue
+            let email = json["commit"]["committer"]["email"].stringValue
+
+            author.name = name
+            author.email = email
+            commitAuthor = author
+        }
+
+        commit.author = commitAuthor
     }
 
     func loadSavedData() {
@@ -135,8 +161,10 @@ class CommitsTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CommitCell", for: indexPath)
 
         let commit = commits[indexPath.row]
+        let author = commit.author.name
+        let date = commit.date.description
         cell.textLabel?.text = commit.message
-        cell.detailTextLabel?.text = commit.date.description
+        cell.detailTextLabel?.text = "By \(author) on \(date)"
 
         return cell
     }
