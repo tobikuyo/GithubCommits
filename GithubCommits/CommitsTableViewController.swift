@@ -14,6 +14,7 @@ class CommitsTableViewController: UITableViewController {
     // MARK: - Properties
 
     var container: NSPersistentContainer!
+    let url = URL(string: "https://api.github.com/repos/apple/swift/commits?per_page=100")!
 
     // MARK: - View Lifecyle
 
@@ -26,9 +27,38 @@ class CommitsTableViewController: UITableViewController {
                 NSLog("Error loading from persistent stores: \(error)")
             }
         }
+
+        performSelector(inBackground: #selector(fetchCommits), with: nil)
     }
 
     // MARK: - Actions
+
+    @objc func fetchCommits() {
+        if let data = try? String(contentsOf: url) {
+            let jsonCommits = JSON(parseJSON: data) // gives the data to SwiftyJSON to parse
+            let jsonCommitsArray = jsonCommits.arrayValue // read the commits back out
+            print("Received \(jsonCommitsArray.count) new commits.")
+
+            DispatchQueue.main.async { [unowned self] in
+                for jsonCommit in jsonCommitsArray {
+                    let commit = Commit(context: self.container.viewContext)
+                    self.configure(commit: commit, usingJSON: jsonCommit)
+                }
+
+                self.saveContext()
+            }
+        }
+    }
+
+    func configure(commit: Commit, usingJSON json: JSON) {
+        commit.sha = json["sha"].stringValue
+        commit.message = json["commit"]["message"].stringValue
+        commit.url = json["url"].stringValue
+
+        let formatter = ISO8601DateFormatter()
+        let dateJSON = json["commit"]["committer"]["date"]
+        commit.date = formatter.date(from: dateJSON.stringValue) ?? Date()
+    }
 
     func saveContext() {
         if container.viewContext.hasChanges {
