@@ -9,14 +9,14 @@
 import UIKit
 import CoreData
 
-class CommitsTableViewController: UITableViewController {
+class CommitsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     // MARK: - Properties
 
     let url = URL(string: "https://api.github.com/repos/apple/swift/commits?per_page=100")!
     var container: NSPersistentContainer!
-    var commits = [Commit]()
     var commitPredicate: NSPredicate?
+    var fetchedResultsController: NSFetchedResultsController<Commit>!
 
     // MARK: - View Lifecyle
 
@@ -87,14 +87,23 @@ class CommitsTableViewController: UITableViewController {
     }
 
     func loadSavedData() {
-        let request = Commit.createFetchRequest()
-        let sortByDate = NSSortDescriptor(key: "date", ascending: false)
-        request.sortDescriptors = [sortByDate]
-        request.predicate = commitPredicate
+        if fetchedResultsController == nil {
+            let request = Commit.createFetchRequest()
+            let sortByDate = NSSortDescriptor(key: "author.name", ascending: false)
+            request.sortDescriptors = [sortByDate]
+            request.fetchBatchSize = 20
+
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
+                                                                  managedObjectContext: container.viewContext,
+                                                                  sectionNameKeyPath: "author.name",
+                                                                  cacheName: nil)
+            fetchedResultsController.delegate = self
+        }
+
+        fetchedResultsController.fetchRequest.predicate = commitPredicate
 
         do {
-            commits = try container.viewContext.fetch(request)
-            print("Got \(commits.count) commits")
+            try fetchedResultsController.performFetch()
             tableView.reloadData()
         } catch {
             NSLog("Error fetching Commit object: \(error)")
@@ -174,17 +183,18 @@ class CommitsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return fetchedResultsController.sections?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return commits.count
+        let sectionInfo = fetchedResultsController.sections?[section]
+        return sectionInfo?.numberOfObjects ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CommitCell", for: indexPath)
 
-        let commit = commits[indexPath.row]
+        let commit = fetchedResultsController.object(at: indexPath)
         let author = commit.author.name
         let date = commit.date.description
         cell.textLabel?.text = commit.message
@@ -195,18 +205,35 @@ class CommitsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
-            vc.detailItem = commits[indexPath.row]
+            vc.detailItem = fetchedResultsController.object(at: indexPath)
             navigationController?.pushViewController(vc, animated: true)
         }
     }
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let commit = commits[indexPath.row]
+            let commit = fetchedResultsController.object(at: indexPath)
             container.viewContext.delete(commit)
-            commits.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
             saveContext()
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return fetchedResultsController.sections![section].name
+    }
+
+    // MARK: NSFetchedResultsControllerDelegate Methods
+
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
+        switch type {
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .automatic)
+        default:
+            break
         }
     }
 }

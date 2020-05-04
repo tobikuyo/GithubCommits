@@ -24,7 +24,7 @@ class DetailViewController: UIViewController {
 //                                                                action: #selector(showAuthorCommits))
         }
     }
-    
+
 
     /*
      // MARK: - Navigation
